@@ -1,0 +1,64 @@
+version: "3.8"
+
+services:
+  db:
+    container_name: "database"
+    image: mysql
+    volumes:
+      - ./mysql_data:/var/lib/mysql
+    cap_add:
+      - SYS_NICE
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      TZ: Asia/Jakarta
+      MYSQL_USER: admin
+      MYSQL_ROOT_PASSWORD: wisokto2021
+      MYSQL_PASSWORD: wisokto2021
+      MYSQL_DATABASE: mediot_v1
+    ports:
+      - "3306:3306"
+    restart: always
+    networks:
+      - "iotnet"
+
+  adminer:
+    image: adminer
+    ports:
+      - "8080:8080"
+    restart: "always"
+    networks:
+      - "iotnet"
+    depends_on:
+      - db
+
+  broker_report:
+    build: ./Broker
+    container_name: "broker_report"
+    # volume:
+    #   - "/Broker:/Broker"
+    ports:
+      - "13217:13217"
+      - "8888:8888"
+    restart: "always"
+    networks:
+      - "iotnet"
+    depends_on:
+      - db
+
+  api_handling:
+    build: ./Handling_API/MedIoT
+    container_name: "api_handling"
+    # volume:
+    #   - "/Handling_API/MedIoT:/API"
+    # command: bash -c 'while !</dev/tcp/db/3306; do sleep 1; done; npm start'
+    ports:
+      - "3000:3000"
+    restart: "always"
+    networks:
+      - "iotnet"
+    depends_on:
+      - db
+
+networks:
+  iotnet:
+    external: true

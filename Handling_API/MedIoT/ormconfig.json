@@ -1,0 +1,18 @@
+{
+  "type": "mysql",
+  "host": "database",
+  "port": 3306,
+  "username": "admin",
+  "password": "wisokto2021",
+  "database": "mediot_v1",
+  "synchronize": true,
+  "logging": false,
+  "entities": ["src/entity/**/*.ts"],
+  "migrations": ["src/migration/**/*.ts"],
+  "subscribers": ["src/subscriber/**/*.ts"],
+  "cli": {
+    "entitiesDir": "src/entity",
+    "migrationsDir": "src/migration",
+    "subscribersDir": "src/subscriber"
+  }
+}
